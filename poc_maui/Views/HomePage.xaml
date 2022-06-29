@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:poc_maui.ViewModels"
+             x:Class="poc_maui.Views.HomePage"
+             xmlns:tabs="clr-namespace:poc_maui.Views.SubViews"
+             Title="HomePage">
+
+    <ContentPage.BindingContext>
+        <vm:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="50, *" RowSpacing="0">
+        <ScrollView Grid.Row="0" Orientation="Horizontal" VerticalOptions="Start" HorizontalScrollBarVisibility="Never"
+                    Scrolled="ScrollView_Scrolled">
+            <StackLayout x:Name="TabsView"
+                        Orientation="Horizontal"
+                        BindableLayout.ItemsSource="{Binding Tabs}" Spacing="0">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Grid RowDefinitions="*, 4" RowSpacing="0">
+                            <Label Grid.Row="0"
+                                   Text="{Binding TabTitle}"
+                                   TextColor="White"
+                                   BackgroundColor="navy"
+                                   Padding="20,0"
+                                   VerticalTextAlignment="Center"
+                                   HorizontalTextAlignment="Center"
+                                   FontSize="12"
+                                   HeightRequest="40"/>
+                            <BoxView Grid.Row="1"
+                                     Color="Yellow"
+                                     IsVisible="{Binding IsSelected}"/>
+
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Path=BindingContext.TabChangedCommand,
+                                                                        Source={x:Reference TabsView}}"
+                                                      CommandParameter="{Binding .}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+
+        </ScrollView>
+
+        <tabs:ParentRecordTabView Grid.Row="1" IsVisible="{Binding IsParentRecordTabVisible}"
+                                          VerticalOptions="FillAndExpand"/>
+        <tabs:AdditionalInfoTabView Grid.Row="1" IsVisible="{Binding IsAdditionalInfoTabVisible}"
+                                            VerticalOptions="FillAndExpand" />
+    </Grid>
+
+   
+</ContentPage>
