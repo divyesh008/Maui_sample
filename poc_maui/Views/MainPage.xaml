@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="poc_maui.Views.MainPage"
+             xmlns:vm="clr-namespace:poc_maui.ViewModels"
+             xmlns:tabs="clr-namespace:poc_maui.Views.SubViews"
+             BackgroundColor="{StaticResource Gray100}"
+             Title="MainPage">
+
+    <ContentPage.BindingContext>
+        <vm:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="50, *" RowSpacing="0">
+
+            <CollectionView x:Name="TabsView"
+                            Grid.Row="0"
+                            ItemsSource="{Binding Tabs}"
+                            ItemsUpdatingScrollMode="KeepItemsInView"
+                            ItemSizingStrategy="MeasureAllItems"
+                            SelectedItem="{Binding SelectedTab}"
+                            SelectionChangedCommand="{Binding Path=BindingContext.TabChangedCommand,
+                                                              Source={x:Reference TabsView}}"
+                            SelectionChangedCommandParameter="{Binding SelectedTab}"
+                            SelectionMode="Single">
+
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal"/>
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid RowSpacing="0" RowDefinitions="*,3">
+                           
+                            <Label Grid.Row="0"
+                                       Text="{Binding TabTitle}"
+                                       TextColor="White"
+                                       BackgroundColor="navy"
+                                       Padding="20,0"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="12" />
+                            <BoxView Grid.Row="1"
+                                   Color="Yellow"
+                                   IsVisible="{Binding IsSelected}"/>
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal" />
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="White" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            
+                        </Grid>
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            
+            <tabs:ParentRecordTabView Grid.Row="1"
+                                      IsVisible="{Binding IsParentRecordTabVisible}"
+                                      VerticalOptions="FillAndExpand"/>
+
+            <tabs:AdditionalInfoTabView Grid.Row="1"
+                                        IsVisible="{Binding IsAdditionalInfoTabVisible}"
+                                        VerticalOptions="FillAndExpand" />
+           
+
+
+        </Grid>
+</ContentPage>

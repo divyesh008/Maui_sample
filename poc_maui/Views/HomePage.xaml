@@ -7,12 +7,12 @@
              Title="HomePage">
 
     <ContentPage.BindingContext>
-        <vm:MainPageViewModel />
+        <vm:HomePageViewModel />
     </ContentPage.BindingContext>
 
     <Grid RowDefinitions="50, *" RowSpacing="0">
-        <ScrollView Grid.Row="0" Orientation="Horizontal" VerticalOptions="Start" HorizontalScrollBarVisibility="Never"
-                    Scrolled="ScrollView_Scrolled">
+        <ScrollView x:Name="theScrollView" Grid.Row="0" Orientation="Horizontal" VerticalOptions="Start"
+                    HorizontalScrollBarVisibility="Never">
             <StackLayout x:Name="TabsView"
                         Orientation="Horizontal"
                         BindableLayout.ItemsSource="{Binding Tabs}" Spacing="0">

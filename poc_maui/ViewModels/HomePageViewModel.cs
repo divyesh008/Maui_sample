@@ -1,32 +1,20 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Windows.Input;
 using poc_maui.Models;
 
 namespace poc_maui.ViewModels
 {
-	public class MainPageViewModel : BaseViewModel
+	public class HomePageViewModel : BaseViewModel
 	{
-        #region Constructor
-        public MainPageViewModel()
+		public HomePageViewModel()
 		{
             GetTabs();
         }
 
-        #endregion
-
-        #region Private Properties
-
         private bool _isParentRecordTabVisible = true;
         private bool _isAdditionalInfoTabVisible;
-
         private ObservableCollection<TabViewModel> _tabs { get; set; }
-        private TabViewModel _selectedTab { get; set; }
-
-        #endregion
-
-        #region Public Properties
 
         public bool IsParentRecordTabVisible
         {
@@ -46,22 +34,6 @@ namespace poc_maui.ViewModels
             set { _tabs = value; OnPropertyChanged(nameof(Tabs)); }
         }
 
-        public TabViewModel SelectedTab
-        {
-            get => _selectedTab;
-            set
-            {
-                _selectedTab = value;
-                OnPropertyChanged(nameof(SelectedTab));
-            }
-        }
-
-        #endregion
-
-        public ICommand TabChangedCommand { get { return new Command<TabViewModel>(ChangeTabClick); } }
-
-        #region Private Methods
-
         private void GetTabs()
         {
             Tabs = new ObservableCollection<TabViewModel>();
@@ -70,43 +42,46 @@ namespace poc_maui.ViewModels
             Tabs.Add(new TabViewModel { TabId = 3, TabTitle = "Contacts" });
             Tabs.Add(new TabViewModel { TabId = 4, TabTitle = "Previous inspections" });
             Tabs.Add(new TabViewModel { TabId = 5, TabTitle = "Attachments" });
-
-            SelectedTab = Tabs.FirstOrDefault();
         }
 
         private void ChangeTabClick(TabViewModel tab)
         {
-            //Tabs.ToList().ForEach(vm => vm.IsSelected = false);
-            //SelectedTab.IsSelected = true;
-
-            Tabs.All((arg) =>
+            try
             {
-                if (arg.TabId == tab.TabId)
-                {
-                    arg.IsSelected = true;
-                }
-                else
-                {
-                    arg.IsSelected = false;
-                }
-                return true;
-            });
-            SelectedTab = Tabs.Where(t => t.IsSelected == true).FirstOrDefault();
+                var tabs = new ObservableCollection<TabViewModel>(Tabs);
 
-            switch (SelectedTab.TabId)
+                foreach (var item in tabs)
+                {
+                    if (item.TabId == tab.TabId)
+                    {
+                        item.IsSelected = true;
+                    }
+                    else
+                    {
+                        item.IsSelected = false;
+                    }
+                }
+
+                Tabs.Clear();
+                Tabs = new ObservableCollection<TabViewModel>(tabs);
+
+                switch (tab.TabId)
+                {
+                    case 1:
+                        IsParentRecordTabVisible = true;
+                        IsAdditionalInfoTabVisible = false;
+                        break;
+                    case 2:
+                        IsParentRecordTabVisible = false;
+                        IsAdditionalInfoTabVisible = true;
+                        break;
+                }
+            }
+            catch (Exception ex)
             {
-                case 1:
-                    IsParentRecordTabVisible = true;
-                    IsAdditionalInfoTabVisible = false;
-                    break;
-                case 2:
-                    IsParentRecordTabVisible = false;
-                    IsAdditionalInfoTabVisible = true;
-                    break;
+                Debug.WriteLine(ex.Message);
             }
         }
-
-        #endregion
     }
 }
 
